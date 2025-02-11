@@ -42,19 +42,18 @@ def test_add_to_cart(driver):
     continue_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Continue Shopping')]")))
     continue_btn.click()
 
-    # ✅ Ensure modal disappears before continuing
+    # Ensure modal disappears before continuing
     wait.until(EC.invisibility_of_element_located((By.XPATH, "//div[@id='cartModal']")))
 
     # 9. Locate Colour Blocked Shirt
     colour_blocked_shirt = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")))
 
-    # ✅ Scroll into view to avoid interception
+    # Scroll into view to avoid interception
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", colour_blocked_shirt)
 
     # 11. Click on the shopping cart icon
     cart_icon = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")))
     cart_icon.click()
 
-    # ✅ Fix View Cart click (add `()`)
     view_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//u[contains(text(), 'View Cart')]")))
     view_btn.click()
