@@ -8,6 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
+    driver.maximize_window()
     yield driver
     driver.quit()
 
@@ -46,12 +47,21 @@ def test_add_to_cart(driver):
     wait.until(EC.invisibility_of_element_located((By.XPATH, "//div[@id='cartModal']")))
 
     # 9. Locate Colour Blocked Shirt
-    colour_blocked_shirt = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")))
+    colour_blocked_shirt = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")))
 
+    elements = driver.find_elements(By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")
+    if elements:
+        colour_blocked_shirt = elements[0]
+    else:
+        raise Exception("Colour Blocked Shirt not found on the page!")
+    
     # Scroll into view to avoid interception
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", colour_blocked_shirt)
 
-    # 11. Click on the shopping cart icon
+    # 10. Hover over Colour Blocked Shirt
+    actions.move_to_element(colour_blocked_shirt).perform()
+
+    # 10. Click on the shopping cart icon
     cart_icon = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")))
     cart_icon.click()
 

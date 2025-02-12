@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture(scope="module")
 def driver():
-    driver = webdriver.Chrome()  # Change to your preferred browser
+    driver = webdriver.Chrome()
     yield driver
     driver.quit()
 
