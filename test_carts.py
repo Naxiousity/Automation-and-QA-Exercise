@@ -49,11 +49,7 @@ def test_add_to_cart(driver):
     # 9. Locate Colour Blocked Shirt
     colour_blocked_shirt = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")))
 
-    elements = driver.find_elements(By.XPATH, "//div[@class='product-overlay'][.//p[contains(text(), 'Colour Blocked Shirt')]]//i[@class='fa fa-shopping-cart']")
-    if elements:
-        colour_blocked_shirt = elements[0]
-    else:
-        raise Exception("Colour Blocked Shirt not found on the page!")
+
     
     # Scroll into view to avoid interception
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", colour_blocked_shirt)
