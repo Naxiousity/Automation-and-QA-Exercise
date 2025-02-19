@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from automation.base_driver import BasePage
 from automation.pages.home_page import HomePage
 from automation.pages.products_page import ProductsPage
 from automation.pages.cart_page import CartPage
