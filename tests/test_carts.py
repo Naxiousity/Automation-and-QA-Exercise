@@ -14,14 +14,21 @@ def driver():
     driver.quit()
 
 def test_add_to_cart(driver):
+    # Navigate to products
     home_page = HomePage(driver)
+    assert home_page.is_home_page_visible(), "Home page failed to load"
     home_page.click_products_button()
 
+    # Select product and add to cart
     products_page = ProductsPage(driver)
-    products_page.click_men_tshirt()
+    products_page.add_men_tshirt_to_cart()
+    products_page.click_continue_shopping_in_modal()  
 
+    # Verify cart page and contents
     cart_page = CartPage(driver)
-    cart_page.click_continue_shopping_button()
+    assert cart_page.is_cart_page_visible(), "Cart page not visible"
+    assert cart_page.get_cart_item_count() > 0, "No items in cart"
 
-    # Add any additional assertions or verifications here
-    assert cart_page.get_title() == "Shopping Cart"
+    # Continue shopping and verify navigation
+    cart_page.click_continue_shopping_button()
+    assert "products" in driver.current_url.lower(), "Did not return to products page"
