@@ -1,80 +1,67 @@
+# test_signup.py
 import pytest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from automation.pages.home_page import HomePage
+from automation.pages.signup_page import SignUpPage
 
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
+    driver.maximize_window()
     yield driver
     driver.quit()
 
 def test_signup_flow(driver):
-    wait = WebDriverWait(driver, 10)
-
-    # 1. Launch browser and 2. Navigate to URL
+    # Step 1 & 2: Launch browser and navigate to URL
     driver.get("http://automationexercise.com")
 
-    # 3. Verify that home page is visible
-    assert "Automation Exercise" in driver.title
+    # Step 3: Verify homepage is visible
+    home_page = HomePage(driver)
+    assert home_page.is_home_page_visible(), "Homepage is not visible"
 
-    # 4. Click on Signup
-    signup_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Signup')]")))
-    signup_btn.click()
+    # Step 4: Click on 'Signup / Login' button
+    home_page.click_signup_login_button()
 
-    # 5. Verify 'New User Signup!' is visible
-    assert wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'New User Signup!')]")))
+    # Step 5: Verify 'New User Signup!' is visible
+    signup_page = SignUpPage(driver)
+    assert signup_page.is_new_user_signup_visible(), "'New User Signup!' section not visible"
 
-    # 6. Enter name and email
-    name = "Jojo Guitarte"
-    driver.find_element(By.XPATH, "//input[@data-qa='signup-name']").send_keys(name)
-    driver.find_element(By.XPATH, "//input[@data-qa='signup-email']").send_keys("Jojotestteste@example.com")
+    # Step 6: Enter name and email
+    signup_page.enter_signup_details("Jojo Guitarte", "Jojotestteste@example.com")
 
-    # 7. Click 'Signup' button
-    driver.find_element(By.XPATH, "//button[contains(text(), 'Signup')]").click()
+    # Step 7: Click 'Signup' button
+    signup_page.click_signup_button()
 
-    # 8. Verify 'ENTER ACCOUNT INFORMATION' is visible
-    assert wait.until(EC.visibility_of_element_located((By.XPATH,"//h2/b[contains(text(), 'Enter Account Information')]")))
+    # Step 8: Verify 'ENTER ACCOUNT INFORMATION' is visible
+    assert signup_page.is_enter_account_info_visible(), "'Enter Account Information' not visible"
 
-    # 9. Fill account details
-    driver.find_element(By.XPATH, "//input[@value='Mr']").click() # hee/hee
-    driver.find_element(By.XPATH, "//input[@type='password']").send_keys("NotMyFather32x") #password
-    driver.find_element(By.XPATH, "//select[@name='days']").send_keys("10") #day
-    driver.find_element(By.XPATH, "//select[@name='months']").send_keys("January") #month
-    driver.find_element(By.XPATH, "//select[@name='years']").send_keys("1969") #year
+    # Step 9: Fill account details
+    signup_page.fill_account_details("NotMyFather32x", "10", "January", "1969")
 
-    # 10 & 11. Select checkboxes
-    driver.find_element(By.XPATH, "//input[@name='newsletter']").click()
-    driver.find_element(By.XPATH, "//input[@name='optin']").click()
+    # Step 10 & 11: Select checkboxes
+    signup_page.select_checkboxes()
 
-    # 12. Fill address details
-    driver.find_element(By.XPATH, "//input[@name='first_name']").send_keys("Jojo")
-    driver.find_element(By.XPATH, "//input[@name='last_name']").send_keys("Guits")
-    driver.find_element(By.XPATH, "//input[@name='last_name']").send_keys("Test Company")
-    driver.find_element(By.ID, "address1").send_keys("123 Test Street")
-    driver.find_element(By.ID, "address2").send_keys("Suite 100")
-    driver.find_element(By.ID, "country").send_keys("United States")
-    driver.find_element(By.ID, "state").send_keys("California")
-    driver.find_element(By.ID, "city").send_keys("Los Angeles")
-    driver.find_element(By.ID, "zipcode").send_keys("90001")
-    driver.find_element(By.ID, "mobile_number").send_keys("1234567890")
+    # Step 12: Fill address details
+    signup_page.fill_address_details(
+        "Jojo", "Guits", "Test Company", "123 Test Street", "Suite 100",
+        "United States", "California", "Los Angeles", "90001", "1234567890"
+    )
 
-    # # 13. Click 'Create Account' button
-    driver.find_element(By.XPATH, "//button[contains(text(), 'Create Account')]").click()
+    # Step 13: Click 'Create Account' button
+    signup_page.click_create_account_button()
 
-    # 14. Verify 'ACCOUNT CREATED!' is visible
-    assert wait.until(EC.visibility_of_element_located((By.XPATH, "//h2/b[contains(text(),'Account Created!')]")))
+    # Step 14: Verify 'ACCOUNT CREATED!' is visible
+    assert signup_page.is_account_created_visible(), "'Account Created!' not visible"
 
-    # 15. Click 'Continue' button
-    driver.find_element(By.XPATH, "//a[contains(text(), 'Continue')]").click()
+    # Step 15: Click 'Continue' button
+    signup_page.click_continue_button()
 
-    # 16. Verify 'Logged in as username' is visible
-    assert wait.until(EC.visibility_of_element_located((By.XPATH, "//i[@class='fa fa-user']")))
+    # Step 16: Verify 'Logged in as username' is visible
+    assert signup_page.is_logged_in_as_visible(), "'Logged in as' not visible"
 
-    # 17. Click 'Delete Account' button
-    driver.find_element(By.XPATH, "//i[@class='fa fa-trash-o']").click()
+    # Step 17: Click 'Delete Account' button
+    signup_page.click_delete_account_button()
 
-    # 18. Verify 'ACCOUNT DELETED!' is visible and click 'Continue'
-    assert wait.until(EC.visibility_of_element_located((By.XPATH, "//b[contains(text(), 'Account Deleted!')]")))
-    driver.find_element(By.XPATH, "//a[contains(text(), 'Continue')]").click()
+    # Step 18: Verify 'ACCOUNT DELETED!' is visible and click 'Continue'
+    assert signup_page.is_account_deleted_visible(), "'Account Deleted!' not visible"
+    signup_page.click_continue_button()
