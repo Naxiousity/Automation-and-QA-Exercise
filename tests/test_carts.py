@@ -1,6 +1,5 @@
 import pytest
 from selenium import webdriver
-from automation.base_driver import BasePage
 from automation.pages.home_page import HomePage
 from automation.pages.products_page import ProductsPage
 from automation.pages.cart_page import CartPage
@@ -15,8 +14,11 @@ def driver():
 
 def test_add_to_cart(driver):
     # Navigate to products
+    driver.get("http://automationexercise.com")
     home_page = HomePage(driver)
     assert home_page.is_home_page_visible(), "Home page failed to load"
+
+
     home_page.click_products_button()
 
     # Select product and add to cart
