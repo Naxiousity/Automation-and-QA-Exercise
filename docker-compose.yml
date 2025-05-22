@@ -1,0 +1,6 @@
+services:
+  tester:
+    build: .
+    volumes:
+      - .:/app
+    command: pytest tests
