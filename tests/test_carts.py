@@ -1,13 +1,21 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from automation.pages.home_page import HomePage
 from automation.pages.products_page import ProductsPage
 from automation.pages.cart_page import CartPage
+import os
 
 
 @pytest.fixture(scope="module")
 def driver():
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
+    driver = webdriver.Remote(command_executor=selenium_url, options=options)
     driver.maximize_window()
     yield driver
     driver.quit()
