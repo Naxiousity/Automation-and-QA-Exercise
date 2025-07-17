@@ -6,13 +6,21 @@ services:
     ports:
       - "4444:4444"
     shm_size: 2g
+    healthcheck: # <--- Add this section
+      test: ["CMD-SHELL", "curl -f http://localhost:4444/wd/hub/status || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s # Delay for just incase
+
 
   tester:
     build: .
     volumes:
       - .:/app
     depends_on:
-      - selenium
+      selenium:
+        condition: service_healthy # <--- Change depends_on condition
     environment:
       - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
-    command: pytest tests
+    command: pytest test_carts.py
