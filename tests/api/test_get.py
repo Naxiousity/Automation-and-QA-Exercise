@@ -13,9 +13,9 @@ def test_get_all_products(base_url, session):
 
 #Test for get user detail by email
 @pytest.mark.parametrize("email,expected_status", [
-    ("test123@exampl.com",200),
+    ("test@example.com",200),
     ("notest@gmail.com",200),
-    ("xoxoxoxoxoxoxoxoxoxoxoxoxoxo123@yahoo.com", 400),
+    ("xoxoxoxoxoxoxoxoxoxoxoxoxoxo123@yahoo.com", 404),
 ])
 def test_get_user_detail_by_email(base_url, session, email, expected_status):
     url = f"{base_url}/getUserDetailByEmail"
@@ -24,4 +24,13 @@ def test_get_user_detail_by_email(base_url, session, email, expected_status):
 
     assert response.status_code == 200
     json = response.json()
-    assert json.get("message") == expected_status
+    assert json.get("responseCode") == expected_status
+
+def test_get_all_brands(base_url, session):
+    url = f"{base_url}/brandsList"
+    response = session.get(url)
+
+    assert response.status_code == 200
+    assert "brands" in response.text.lower()
+    assert response.elapsed.total_seconds() < 5
+    
