@@ -5,7 +5,7 @@ from automation.pages.home_page import HomePage
 from automation.pages.products_page import ProductsPage
 from automation.pages.cart_page import CartPage
 import os
-
+ 
 
 @pytest.fixture(scope="module")
 def driver():

@@ -4,11 +4,12 @@ from selenium import webdriver
 from automation.pages.home_page import HomePage
 from automation.pages.signup_page import SignUpPage
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
     driver.maximize_window()
-    yield driver
+    yield driver  
     driver.quit()
 
 def test_signup_flow(driver):

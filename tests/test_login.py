@@ -1,36 +1,41 @@
-# login_page.py
-from automation.base_driver import BasePage
-from selenium.webdriver.common.by import By
+import pytest
 
-class LoginPage(BasePage):
-    # Locators
-    LOGIN_SECTION = (By.XPATH, "//h2[text()='Login to your account']")
-    EMAIL_FIELD = (By.NAME, "email")
-    PASSWORD_FIELD = (By.NAME, "password")
-    LOGIN_BUTTON = (By.XPATH, "//button[@type='submit' and contains(text(), 'Login')]")
-    ERROR_MESSAGE = (By.XPATH, "//p[text()='Your email or password is incorrect!']")
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from automation.pages.login_page import LoginPage
 
-    def __init__(self, driver):
-        super().__init__(driver)
 
-    def is_login_section_visible(self):
-        # Verify the login section is visible
-        return self.wait_until_element_is_visible(self.LOGIN_SECTION).is_displayed()
+@pytest.mark.parametrize("email,password,expect_success", [
+    ("test@example.com", "correctpass", True),   # 🔁 Replace with actual working credentials
+    ("wrong@example.com", "wrongpass", False),
+])
 
-    def enter_email(self, email):
-        email_field = self.wait_until_element_is_clickable(self.EMAIL_FIELD)
-        email_field.clear()  # Clear any pre-filled text
-        email_field.send_keys(email)
+def driver():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    def enter_password(self, password):
-        password_field = self.wait_until_element_is_clickable(self.PASSWORD_FIELD)
-        password_field.clear()
-        password_field.send_keys(password)
+    selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
+    driver = webdriver.Remote(command_executor=selenium_url, options=options)
+    driver.maximize_window()
+    yield driver
+    driver.quit()
 
-    def click_login_button(self):
-        login_btn = self.wait_until_element_is_clickable(self.LOGIN_BUTTON)
-        login_btn.click()
+def test_login_functionality(driver, email, password, expect_success):
+    login_page = LoginPage(driver)
 
-    def is_error_message_visible(self):
-        # Verify the error message is displayed
-        return self.wait_until_element_is_visible(self.ERROR_MESSAGE).is_displayed()
+    # Assert login section is visible
+    assert login_page.is_login_section_visible()
+
+    # Perform login
+    login_page.enter_email(email)
+    login_page.enter_password(password)
+    login_page.click_login_button()
+
+    if expect_success:
+        # If login is expected to succeed, assert that error is NOT visible
+        assert not login_page.is_error_message_visible()
+    else:
+        # If login expected to fail, assert error message is visible
+        assert login_page.is_error_message_visible()
