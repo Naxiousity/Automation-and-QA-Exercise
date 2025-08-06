@@ -1,15 +1,12 @@
 import pytest
+import os
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from automation.pages.login_page import LoginPage
 
 
-@pytest.mark.parametrize("email,password,expect_success", [
-    ("test@example.com", "correctpass", True),   # 🔁 Replace with actual working credentials
-    ("wrong@example.com", "wrongpass", False),
-])
-
+@pytest.fixture(scope="module")
 def driver():
     options = Options()
     options.add_argument("--headless")
@@ -18,10 +15,16 @@ def driver():
 
     selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
     driver = webdriver.Remote(command_executor=selenium_url, options=options)
+    driver.get("https://automationexercise.com/login")
     driver.maximize_window()
     yield driver
     driver.quit()
 
+
+@pytest.mark.parametrize("email,password,expect_success", [
+    ("test@example.com", "correctpass", True),   # 🔁 Replace with actual working credentials
+    ("wrong@example.com", "wrongpass", False),
+])
 def test_login_functionality(driver, email, password, expect_success):
     login_page = LoginPage(driver)
 
