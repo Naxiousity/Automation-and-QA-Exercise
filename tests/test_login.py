@@ -22,7 +22,7 @@ def driver():
 
 
 @pytest.mark.parametrize("email,password,expect_success", [
-    ("test@example.com", "correctpass", True),   # 🔁 Replace with actual working credentials
+    ("test@example.com", "correctpass", True),
     ("wrong@example.com", "wrongpass", False),
 ])
 def test_login_functionality(driver, email, password, expect_success):
