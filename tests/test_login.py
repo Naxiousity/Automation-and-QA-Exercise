@@ -6,15 +6,20 @@ from selenium.webdriver.chrome.options import Options
 from automation.pages.login_page import LoginPage
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def driver():
     options = Options()
-    options.add_argument("--headless")
+    #options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    
+    # For Docker
+    #selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
+    #driver = webdriver.Remote(command_executor=selenium_url, options=options)
 
-    selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
-    driver = webdriver.Remote(command_executor=selenium_url, options=options)
+    # For Individual Testing
+    driver = webdriver.Chrome(options=options)
+
     driver.get("https://automationexercise.com/login")
     driver.maximize_window()
     yield driver
@@ -22,7 +27,7 @@ def driver():
 
 
 @pytest.mark.parametrize("email,password,expect_success", [
-    ("bourdeuxx@gmail.com", "test123", True),
+    ("bordeuxx@gmail.com", "test123", True),
     ("minininininininii@example.com", "wrongpass", False),
 ])
 def test_login_functionality(driver, email, password, expect_success):
