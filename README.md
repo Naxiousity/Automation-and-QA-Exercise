@@ -75,5 +75,5 @@ SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
 
 ## 👨‍💻 Author
 
-**[Your Name]**  
+**Engr. Francis Nicole Raut**  
 *QA Automation Engineer*
