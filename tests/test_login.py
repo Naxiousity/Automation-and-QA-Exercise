@@ -22,8 +22,8 @@ def driver():
 
 
 @pytest.mark.parametrize("email,password,expect_success", [
-    ("test@example.com", "correctpass", True),
-    ("wrong@example.com", "wrongpass", False),
+    ("bourdeuxx@gmail.com", "test123", True),
+    ("minininininininii@example.com", "wrongpass", False),
 ])
 def test_login_functionality(driver, email, password, expect_success):
     login_page = LoginPage(driver)
@@ -37,8 +37,6 @@ def test_login_functionality(driver, email, password, expect_success):
     login_page.click_login_button()
 
     if expect_success:
-        # If login is expected to succeed, assert that error is NOT visible
-        assert not login_page.is_error_message_visible()
+        assert login_page.is_logout_button_visible(), "Logout button not visible – login may have failed"
     else:
-        # If login expected to fail, assert error message is visible
-        assert login_page.is_error_message_visible()
+        assert login_page.is_error_message_visible(), "Expected error message not shown"
