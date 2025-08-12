@@ -9,6 +9,8 @@ class LoginPage(BasePage):
     PASSWORD_FIELD = (By.NAME, "password")
     LOGIN_BUTTON = (By.XPATH, "//button[@type='submit' and contains(text(), 'Login')]")
     ERROR_MESSAGE = (By.XPATH, "//p[text()='Your email or password is incorrect!']")
+    LOGGED_IN_AS = (By.XPATH, "//*[contains(text(),'Logged in as')]")
+    LOGOUT_BUTTON = (By.XPATH, "//a[contains(text(),'Logout')]")
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -32,5 +34,10 @@ class LoginPage(BasePage):
         login_btn.click()
 
     def is_error_message_visible(self):
-        # Verify the error message is displayed
         return self.wait_until_element_is_visible(self.ERROR_MESSAGE).is_displayed()
+    
+    def is_logged_in_as_visible(self):
+        return self.wait_until_element_is_visible(self.LOGGED_IN_AS).is_displayed()
+    
+    def is_logout_button_visible(self):
+        return self.wait_until_element_is_visible(self.LOGOUT_BUTTON).is_displayed()
