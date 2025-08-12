@@ -14,16 +14,20 @@ def driver():
     options.add_argument("--disable-dev-shm-usage")
     
     # For Docker
-    #selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
-    #driver = webdriver.Remote(command_executor=selenium_url, options=options)
+    selenium_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
+    driver = webdriver.Remote(command_executor=selenium_url, options=options)
 
     # For Individual Testing
-    driver = webdriver.Chrome(options=options)
+    # driver = webdriver.Chrome(options=options)
 
     driver.get("https://automationexercise.com/login")
     driver.maximize_window()
     yield driver
     driver.quit()
+    try:
+        driver.quit()
+    except Exception as e:
+        print(f"Error during driver.quit(): {e}")
 
 
 @pytest.mark.parametrize("email,password,expect_success", [
