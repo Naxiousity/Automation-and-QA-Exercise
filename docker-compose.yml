@@ -23,4 +23,4 @@ services:
         condition: service_healthy # <--- Change depends_on condition
     environment:
       - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
-    command: pytest tests/test_login.py
+    command: pytest tests/test_login.py # <--- Change to whatever you want to test

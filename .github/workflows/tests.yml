@@ -40,8 +40,8 @@ jobs:
       run: |
         pytest tests/api/ --maxfail=3 --disable-warnings -v
 
-    - name: 🧪 Run Pytest on UI login test
-      env:
-        SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
-      run: |
-        pytest tests/test_login.py --maxfail=1 --disable-warnings -v
+      - name: 🧪 Run UI tests (login + signup)
+        env:
+          SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+        run: |
+          pytest tests/test_login.py tests/test_signup.py --maxfail=1 --disable-warnings -v
